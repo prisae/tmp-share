@@ -362,11 +362,10 @@ class interp1d(_Interpolator1D):
         axis must be equal to the length of `x`.
     kind : str or int, optional
         Specifies the kind of interpolation as a string
-        ('linear', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic', 'left',
-        'right', where 'zero', 'slinear', 'quadratic' and 'cubic' refer to a
-        spline interpolation of zeroth, first, second or third order; 'left'
-        and 'right' simply return the value left or right of the point) or as
-        an integer specifying the order of the spline interpolator to use.
+        ('linear', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic'
+        where 'zero', 'slinear', 'quadratic' and 'cubic' refer to a spline
+        interpolation of zeroth, first, second or third order) or as an
+        integer specifying the order of the spline interpolator to use.
         Default is 'linear'.
     axis : int, optional
         Specifies the axis of `y` along which to interpolate.
@@ -441,7 +440,7 @@ class interp1d(_Interpolator1D):
         elif isinstance(kind, int):
             order = kind
             kind = 'spline'
-        elif kind not in ('linear', 'nearest', 'left', 'right'):
+        elif kind not in ('linear', 'nearest'):
             raise NotImplementedError("%s is unsupported: Use fitpack "
                                       "routines for other types." % kind)
         x = array(x, copy=self.copy)
@@ -476,7 +475,7 @@ class interp1d(_Interpolator1D):
         # interpolation methods, in order to avoid circular references to self
         # stored in the bound instance methods, and therefore delayed garbage
         # collection.  See: http://docs.python.org/2/reference/datamodel.html
-        if kind in ('linear', 'nearest', 'left', 'right'):
+        if kind in ('linear', 'nearest'):
             # Make a "view" of the y array that is rotated to the interpolation
             # axis.
             minval = 2
@@ -487,17 +486,6 @@ class interp1d(_Interpolator1D):
                 self.x_bds = self.x_bds[1:] + self.x_bds[:-1]
 
                 self._call = self.__class__._call_nearest
-            elif kind in ('left', 'right'):
-                # Move x slightly, as points which are exactly the same as
-                # x would otherwise take the neighbours value.
-                if kind == 'left':
-                    self.x_bds = self.x - 10*np.finfo(float).eps
-                else:
-                    self.x_bds = self.x + 10*np.finfo(float).eps
-
-                self.side = kind
-
-                self._call = self.__class__._call_leftright
             else:
                 # Check if we can delegate to numpy.interp (2x-10x faster).
                 cond = self.x.dtype == np.float_ and self.y.dtype == np.float_
@@ -625,26 +613,6 @@ class interp1d(_Interpolator1D):
 
         # 4. Calculate the actual value for each entry in x_new.
         y_new = self._y[x_new_indices]
-
-        return y_new
-
-    def _call_leftright(self, x_new):
-        """Use neighbour left/right of x_new, y_new = f(x_new)."""
-
-        # 0. Index depending on left/right
-        if self.side == 'left':
-            ind = 0
-        else:
-            ind = 1
-
-        # 1. Get index of left/right value
-        x_new_indices = searchsorted(self.x_bds, x_new, side=self.side)
-
-        # 2. Clip x_new_indices so that they are within the range of x indices.
-        x_new_indices = x_new_indices.clip(1-ind, len(self.x)-ind).astype(intp)
-
-        # 3. Calculate the actual value for each entry in x_new.
-        y_new = self._y[x_new_indices+ind-1]
 
         return y_new
 
