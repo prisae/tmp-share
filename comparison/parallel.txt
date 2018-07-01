@@ -1,0 +1,98 @@
+Timer unit: 1e-06 s
+
+
+Total time: 2.031 s
+File: /home/dtr/Codes/empymod/empymod/model.py
+Function: dipole at line 605
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   954         1    2026652.0 2026652.0     99.8      EM, kcount, conv = fem(*inp)
+
+
+Total time: 2.02662 s
+File: /home/dtr/Codes/empymod/empymod/model.py
+Function: fem at line 1456
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1518         1          2.0      2.0      0.0              out = calc(zsrc, zrec, lsrc, lrec, off, angle, depth, ab, etaH,
+  1519         1          1.0      1.0      0.0                         etaV, zetaH, zetaV, xdir, htarg, use_ne_eval, msrc,
+  1520         1    2023388.0 2023388.0     99.8                         mrec)
+
+
+Total time: 2.01897 s
+File: /home/dtr/Codes/empymod/empymod/transform.py
+Function: fht at line 47
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   101         1          1.0      1.0      0.0      PJ = kernel.wavenumber(zsrc, zrec, lsrc, lrec, depth, etaH, etaV, zetaH,
+   102         1    2007020.0 2007020.0     99.4                             zetaV, lambd, ab, xdirect, msrc, mrec, use_ne_eval)
+
+
+Total time: 1.99681 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: wavenumber at line 57
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    99         1          1.0      1.0      0.0      PTM, PTE = greenfct(zsrc, zrec, lsrc, lrec, depth, etaH, etaV, zetaH,
+   100         1    1956328.0 1956328.0     98.0                          zetaV, lambd, ab, xdirect, msrc, mrec, use_ne_eval)
+
+
+Total time: 1.94208 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: greenfct at line 142
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   197         2     631999.0 315999.5     32.5              Gam = use_ne_eval("sqrt(ez_ratio*lambd2 + ez_prod)")
+
+   208         2     867401.0 433700.5     44.7              Rp, Rm = reflections(depth, e_zH, Gam, lrec, lsrc, use_ne_eval)
+
+   217         2      41093.0  20546.5      2.1                      Wu = use_ne_eval("exp(-lrecGam*ddepth)")
+
+   227         2      42296.0  21148.0      2.2                      Wd = use_ne_eval("exp(-lrecGam*ddepth)")
+
+   234         2         17.0      8.5      0.0              Pu, Pd = fields(depth, Rp, Rm, Gam, lrec, lsrc, zsrc, ab, TM,
+   235         2     280636.0 140318.0     14.5                              use_ne_eval)
+
+
+Total time: 0.866425 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: reflections at line 337
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   389        18     297074.0  16504.1     34.3                  rloc = use_ne_eval(rlocstr)
+
+
+   408        14     375187.0  26799.1     43.3                      term = use_ne_eval("tRef*exp(-2*iGam*ddepth)")
+   409        14     164182.0  11727.3     18.9                      tRef = use_ne_eval("(rloc + term)/(1 + rloc*term)")
+
+
+Total time: 0.280203 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: fields at line 437
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   534         4      89188.0  22297.0     31.8                      Ms = use_ne_eval("1-Rmp*Rpm*exp(-2*iGam*ds)")
+   535         4         28.0      7.0      0.0                      P = use_ne_eval("Rmp/Ms*(exp(-iGam*dm) + " +
+   536         4     166317.0  41579.2     59.4                                      "pm*Rpm*exp(-iGam*(ds+dp)))")
+
+
+Total time: 0.011508 s
+File: /home/dtr/Codes/empymod/empymod/transform.py
+Function: dlf at line 819
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   885         3       7583.0   2527.7     65.9              k_used.append(np.any(val != 0))
+
+   967         1       1183.0   1183.0     10.3                  out_signal += np.dot(inp_PJ1, filt.j1)
+
+   976         1       1169.0   1169.0     10.2                  out_signal += np.dot(inp_PJ0b, filt.j0)
+
+   983         1       1263.0   1263.0     11.0                  out_signal += np.dot(inp_PJ0, filt.j0)

@@ -1,0 +1,106 @@
+Timer unit: 1e-06 s
+
+
+Total time: 0.655617 s
+File: /home/dtr/Codes/empymod/empymod/model.py
+Function: dipole at line 605
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   954         1     650510.0 650510.0     99.2      EM, kcount, conv = fem(*inp)
+
+
+Total time: 0.64937 s
+File: /home/dtr/Codes/empymod/empymod/model.py
+Function: fem at line 1456
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1501       100        113.0      1.1      0.0                  out = calc(zsrc, zrec, lsrc, lrec, off, angle, depth, ab,
+  1502       100        230.0      2.3      0.0                             etaH[None, i, :], etaV[None, i, :],
+  1503       100        178.0      1.8      0.0                             zetaH[None, i, :], zetaV[None, i, :], xdir,
+  1504       100     643875.0   6438.8     99.2                             htarg, use_ne_eval, msrc, mrec)
+
+
+Total time: 0.642088 s
+File: /home/dtr/Codes/empymod/empymod/transform.py
+Function: fht at line 47
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   101       100        202.0      2.0      0.0      PJ = kernel.wavenumber(zsrc, zrec, lsrc, lrec, depth, etaH, etaV, zetaH,
+   102       100     454606.0   4546.1     70.8                             zetaV, lambd, ab, xdirect, msrc, mrec, use_ne_eval)
+
+   108       100     147671.0   1476.7     23.0      fEM = dlf(PJ, lambd, off, fhtfilt, pts_per_dec, factAng=factAng, ab=ab)
+
+
+Total time: 0.450906 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: wavenumber at line 57
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    99       100        159.0      1.6      0.0      PTM, PTE = greenfct(zsrc, zrec, lsrc, lrec, depth, etaH, etaV, zetaH,
+   100       100     440528.0   4405.3     97.7                          zetaV, lambd, ab, xdirect, msrc, mrec, use_ne_eval)
+
+
+Total time: 0.414427 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: greenfct at line 142
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   199       200       1384.0      6.9      0.5              Gam = np.sqrt((e_zH/e_zV)[:, None, :, None] *
+   200       200       4333.0     21.7      1.7                            (lambd*lambd)[None, :, None, :] +
+   201       200      11447.0     57.2      4.5                            (z_eH*e_zH)[:, None, :, None])
+
+   208       200     234349.0   1171.7     56.5              Rp, Rm = reflections(depth, e_zH, Gam, lrec, lsrc, use_ne_eval)
+
+   219       200       4216.0     21.1      1.0                      Wu = np.exp(-lrecGam*ddepth)
+
+   229       200       7424.0     37.1      1.8                      Wd = np.exp(-lrecGam*ddepth)
+
+   234       200        612.0      3.1      0.1              Pu, Pd = fields(depth, Rp, Rm, Gam, lrec, lsrc, zsrc, ab, TM,
+   235       200     112387.0    561.9     27.1                              use_ne_eval)
+
+
+Total time: 0.178411 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: reflections at line 337
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   391      1800      11975.0      6.7      6.7                  rloca = e_zHa*Gama
+   392      1800       8094.0      4.5      4.5                  rlocb = e_zHb*Gamb
+   393      1800      16456.0      9.1      9.2                  rloc = (rloca - rlocb)/(rloca + rlocb)
+
+   397       400       1825.0      4.6      1.0                  tRef = rloc.copy()
+
+   411      1400      55367.0     39.5     31.0                      term = tRef*np.exp(-2*iGam*ddepth)  # NOQA
+   412      1400      18109.0     12.9     10.2                      tRef = (rloc + term)/(1 + rloc*term)
+
+
+Total time: 0.081697 s
+File: /home/dtr/Codes/empymod/empymod/kernel.py
+Function: fields at line 437
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   538       400      18370.0     45.9     22.5                      Ms = 1 - Rmp*Rpm*np.exp(-2*iGam*ds)
+   539       400      14536.0     36.3     17.8                      P = Rmp/Ms*(np.exp(-iGam*dm) +
+   540       400      19538.0     48.8     23.9                                  pm*Rpm*np.exp(-iGam*(ds+dp)))
+
+
+Total time: 0.124002 s
+File: /home/dtr/Codes/empymod/empymod/transform.py
+Function: dlf at line 819
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   967       100      10631.0    106.3      8.6                  out_signal += np.dot(inp_PJ1, filt.j1)
+
+   976       100       4639.0     46.4      3.7                  out_signal += np.dot(inp_PJ0b, filt.j0)
+
+   983       100       4981.0     49.8      4.0                  out_signal += np.dot(inp_PJ0, filt.j0)
+
+  1006       100      35298.0    353.0     28.5              out_signal = spline(out_signal[::-1], int_pts[::-1], out_pts)
