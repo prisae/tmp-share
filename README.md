@@ -8,3 +8,4 @@ collaboration. Don't expect anything stable nor permanent from this repo...
 * [3D volume slicer](./3D-slices.ipynb)
 * [Running Matlab in Jupyter](./RunningMatlabInJupyter.ipynb)
 * [1D next/previous interpolation](./interp1d-left-right.ipynb)
+* [Runtime comparison of 8 different methods](./multiply_volume.ipynb)
